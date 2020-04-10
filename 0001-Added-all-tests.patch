@@ -1,0 +1,71 @@
+From 10a7baef723f6fb17c9fff8be093269c9291da1f Mon Sep 17 00:00:00 2001
+From: Debarshi Kundu <debarshikundu0@utexas.edu>
+Date: Fri, 10 Apr 2020 00:48:56 +0000
+Subject: [PATCH] Added all tests
+
+---
+ client_test.py | 38 +++++++++++++++++++++++++++-----------
+ 1 file changed, 27 insertions(+), 11 deletions(-)
+
+diff --git a/client_test.py b/client_test.py
+index 7d962ed..50b80c9 100644
+--- a/client_test.py
++++ b/client_test.py
+@@ -10,7 +10,7 @@ class ClientTest(unittest.TestCase):
+     ]
+     """ ------------ Add the assertion below ------------ """
+     for quote in quotes:
+-      self.assertEqual(getDataPoint(quote),[quote['stock'], quote['top_bid']['price'], quote['top_ask']['price'], (quote['top_bid']['price']+quote['top_ask']['price'])/2])
++       self.assertEqual(getDataPoint(quote), (quote['stock'], quote['top_bid']['price'], quote['top_ask']['price'], (quote['top_bid']['price'] + quote['top_ask']['price'])/2))
+   def test_getDataPoint_calculatePriceBidGreaterThanAsk(self):
+     quotes = [
+       {'top_ask': {'price': 119.2, 'size': 36}, 'timestamp': '2019-02-11 22:06:30.572453', 'top_bid': {'price': 120.48, 'size': 109}, 'id': '0.109974697771', 'stock': 'ABC'},
+@@ -18,19 +18,35 @@ class ClientTest(unittest.TestCase):
+     ]
+     """ ------------ Add the assertion below ------------ """
+     for quote in quotes:
+-      self.assertEqual(getDataPoint(quote),[quote['stock'], quote['top_bid']['price'], quote['top_ask']['price'], (quote['top_bid']['price']+quote['top_ask']['price'])/2])
++       self.assertEqual(getDataPoint(quote), (quote['stock'], quote['top_bid']['price'], quote['top_ask']['price'], (quote['top_bid']['price'] + quote['top_ask']['price'])/2))
+ 
+   """ ------------ Add more unit tests ------------ """
+ 
+-  def test_getRatio(self):
+-    prices = [
+-      {'price_a':119.2, 'price_b': 121.68},
+-      {'price_a':122.3, 'price_b': 117.84}
+-    ]
+-    for price in prices:
+-      self.assertNotEqual(np.nan, price[0]/price[1])
+-      self.assertEqual(getRatio(price[0],price[1]), price[0]/price[1])
+-      
++  def test_getRatio_lessthanone(self):
++    price_a = 167.8
++    price_b = 276.9
++    self.assertLess(getRatio(price_a,price_b),1)
++  
++  def test_getRatio_greaterthanone(self):
++    price_a = 276.9
++    price_b = 100.3
++    self.assertGreater(getRatio(price_a,price_b),1)
++  
++  def test_getRatio_equaltoone(self):
++    price_a = 100.3
++    price_b = 100.3
++    self.assertEqual(getRatio(price_a,price_b),1)
++  
++  def test_getRatio_AZero(self):
++    price_a = 0
++    price_b = 276.9
++    self.assertEqual(getRatio(price_a,price_b),0)
++
++  #ZeroDivisionError 
++  def test_getRatio_BZero(self):
++    price_a = 167.8
++    price_b = 0
++    self.assertIsNone(getRatio(price_a,price_b))
+     
+   
+ if __name__ == '__main__':
+-- 
+2.20.1
+
